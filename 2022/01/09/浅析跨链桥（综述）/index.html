@@ -1,0 +1,71 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="description" content="做时间的朋友，在不确定性中发现价值。"><meta name="keyword"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>浅析跨链桥（综述）</title><link rel="shortcut icon" href="https://storageapi.fleek.co/casimir-crystal-team-bucket/metanetwork/users/metaio-storage/favicon.ico" type="image/x-icon"><link href="/styles/site.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="刘言不蜚语" type="application/atom+xml">
+</head><body><header class="container" id="header"><div class="header"><div class="header-left"><div class="avatar"><img src="/images/MetaSpace_Logo.svg"></div><div class="author"><div class="author-name"><a href="/">刘言不蜚语</a></div><div class="about-me">一介布衣，一个读书人。</div></div></div><div class="header-right"><ul class="navigation"><li><a href="/archives">归档</a></li></ul></div></div><div class="about-me-wrap"><div class="about-header"> <div class="about__title">About</div><a class="domain">blog.metaspaces.me</a></div><div class="about-content">做时间的朋友，在不确定性中发现价值。</div><div class="about-author"><span>Author</span><div class="profile"> <div class="avatar"><img src="https://storageapi.fleek.co/andoroyur-team-bucket/metanetwork/users/metaio-storage/wei-xin-tu-pian-20211116221141.jpg"></div><div class="author-name">liuwenzhou</div></div></div></div></header><div class="container post"><section class="article"><div class="title">浅析跨链桥（综述）</div><div class="meta"> <div class="profile"> <div class="avatar"><img src="https://storageapi.fleek.co/andoroyur-team-bucket/metanetwork/users/metaio-storage/wei-xin-tu-pian-20211116221141.jpg"></div><div class="author-name">liuwenzhou</div></div><div class="date meta-ele">January 9th 2022</div></div><div class="content"><p><strong>行文不易，转载请注明出处。</strong></p>
+<p><strong>（公众号：刘言不蜚语）</strong></p>
+<p><img src="https://ipfs.fleek.co/ipfs/QmaJVBkbdumtQA1ihv31jAaeUQixRCjPHs9j8yS5L5mxsv" alt="2404b459-f60a-432b-9c81-364b37cdb73d"></p>
+<p><strong>一、写在前面</strong></p>
+<p>区块链行业的发展是螺旋式上升的过程，随着行业生态的不断完善以及区块链应用场景的持续延伸，资本和市场的需求会倒逼区块链技术本身的自我革新和发展，跨链桥技术也是因此而诞生的。所谓跨链桥，就是不同区块链之间进行信息通信的技术安排，通过中心化或去中心化的方式，实现源链对目标链的信息传递，进而实现资产转移和信息交互。跨链桥技术的出现，是对区块链信息系统的升维操作，如果将单一区块链比作一维直线，跨链桥技术则打破了一维信息孤岛，将区块链带入到三维立体世界。</p>
+<p><strong>二、为什么需要跨链桥</strong></p>
+<p><strong>（一）提高加密资产的应用场景</strong></p>
+<p>现阶段区块链加密资产价值持续走高，金融应用场景不断革新，逐渐赢得了传统行业和主流民众的认可，今年以来，诸如 Defi1.0、Defi2.0、NFT 和 Gamefi 等革新玩法，大大提高了不同区块链项目原生资产的跨链需求，对加密资产的生息和盈利需求大大助推了跨链桥技术的发展。</p>
+<p><strong>（二）区块链生态的外部性拓展</strong></p>
+<p>诸如 Solana、Fantom 这些新兴爆发的公链而言，其链上资产和优质项目有限，如果想引爆项目生态，提升参与度并吸引资金入场，就必须引入现有成熟的诸如以太坊、BSC 链上的聪明资金。通过构建高效的跨链桥，可以实现区块链生态的链外拓展，这也是大多数公链项目均积极筹备建设自有跨链桥的原因。</p>
+<p><strong>（三）应对监管挑战的可行性方案</strong></p>
+<p>随着不同国家对加密货币行业监管的日趋严格，部分国家和地区的居民由于 CEX 的使用限制，使得通过 CEX 进行充值和提现的中心化资产跨链方式应用受限，因此，构建去中心化的，无需 KYC 认证的跨链桥，能够让更多用户便利的进行资产跨链和加密资产应用。</p>
+<p><strong>三、加密资产的跨链安排</strong></p>
+<p>由于当前跨链桥应用场景主要以资产（Token）跨链为主，因此在后面的行文中主要围绕加密资产的跨链进行阐述。本部分我们脱离跨链桥技术本身，基于 YFI 的创始人 Andre Cronje 对跨链资产的分类法，简要阐述四种加密资产的跨链安排方法（假设跨链比例为 1:1，例如以太坊锁定 1 枚 USDT，跨链后，在 BSC 上获得 1 枚 USDT）。</p>
+<p><strong>（一）Balance float（余额调整）</strong></p>
+<p>此类方法是指先在跨链的目标链上铸造足额的 Token 形成一个余额流动性池（Balance float），跨链开始后，每在源区块链锁定 1 枚 Token，则在目标链中从 Balance float 转出 1 枚 Token 至目标地址。由于需要提前 mint 出目标链的流动性池，因此流动性池的安全性就显得尤为重要，同时用户也会面临项目方超发货币的风险。</p>
+<p><strong>（二）Mint/Burn（铸造/销毁）</strong></p>
+<p>即每在源区块链上销毁 1 枚 Token，即在目标链上铸造 1 枚 Token，这种模式可以保证 Token 总供给量的固定，不会出现代币超发突破代币总数的问题。当然，这种模式也可以结合第一种流动性池（Balance float）的方法，当源区块链流动性池中转入 1 枚 Token 时，就在目标链铸造一枚 Token。此类铸造/销毁的方法，是当前区块链中应用最为广泛也是最简单的跨链安排方式。</p>
+<p><strong>（三）Liquidity swap（流动性互换）</strong></p>
+<p>此类方法主要强调使用一种封装资产（Wrapped Token）作为跨链的中间资产，当进行资产跨链时，首先在目标链生成封装资产，而后使用流动性池将封装资产与非封装资产进行互换。（例如将 1USDC 从以太坊跨链至 FTM，首先使用 anyswap 得到封装代币 anyUSDC，而后提供 USDC-anyUSDC 交易对，依据市场需求实现封装代币和原生代币的转换。）这种方法与前两种方法最大的区别在于通过引入封装代币，使得跨链桥的目标链端与原生资产脱钩，将原生资产在一定程度上与跨链桥本身的安全性进行隔离。</p>
+<p><strong>（四）Wrapped + Mint/Burn（封装 + 铸造/销毁）</strong></p>
+<p>此类方法更进一步，在源区块链上将原生代币转换为封装代币，在跨链桥的铸造和销毁阶段均使用封装代币，而后将目标链的封装代币转换为原生代币。（例如将 1USDC 从以太坊跨链至 FTM，首先在以太坊上将 USDC 换为封装代币 anyUSDC，而后通过跨链桥将以太坊的 anyUSDC 跨链为 FTM 的 anyUSDC，最后提供 USDC-anyUSDC 交易对，得到 FTM 上的 USDC。）这种方式将跨链桥与跨链资产本身分离，降低了跨链桥的安全性问题对跨链资产价值的影响。</p>
+<p><strong>四、浅析桥技术</strong></p>
+<p>本部分聚焦于跨链桥技术本身，对于桥技术的分类有很多维度，有的根据实现目标将桥技术划分为针对特定资产的、针对特定区块链的、针对特定应用的以及通用的跨链桥技术；有的根据跨链 Token 管理方式将桥技术划分为托管的和非托管的；有的根据跨链桥共识机制将桥技术划分中心化的、POA、POS 和 MPC（Multi Party Computation）。不管是哪种分类维度，最核心的是跨链桥本身对跨链交易的验证，这也是保障跨链桥健壮性的核心设计组件，因此基于对交易的验证模式，对跨链桥技术进行如下分类，并结合当前项目进行举例：</p>
+<p><strong>（一）中心化的跨链网络</strong></p>
+<p>此类跨链技术往往与中心化交易所紧密相关，我们以币安交易所的 Binance Bridge 为例。Binance Bridge 已经开发至 V3 版本，目前基于币安交易所的币安链和币安智能链生态，支持币安链、币安智能链、以太坊、TRON、Solana 等公链上 60 多种主流资产的跨链，项目开发的初衷主要是围绕 BSC 和以太坊的资产跨链，确保 BSC 生态的蓬勃发展。近期币安交易所发布了 Token Canal 项目，该项目旨在通过在不同公链中发行锚定衍生资产，并为各类资产提供流动性，进而为币安链和币安智能链的用户提供一键跨链平台。</p>
+<p><strong>（二）Third Party Verification（第三方验证）</strong></p>
+<p>所谓第三方是指跨链桥验证交易的执行者为不同于项目方的第三方组织，其往往与跨链桥项目方为合作关系，为项目方选拔出的具备资质、值得信任的跨链桥网络安全维护者。在此类验证模式中，这些第三方验证者会对用户发起的跨链交易进行最终性和安全性确认，达成共识后，用户就会在目标链上接收到跨链资产。理论上而言，第三方验证者的数量越多，跨链桥的运行就越去中心化，但在实际中，此类跨链桥运作模式往往是偏向中心化的，因此跨链桥运作的安全与否很大程度上决定于项目方本身的技术实力和对合作方的遴选能力。为进一步约束第三方验证者的行为，部分跨链桥网络会对验证者实施保证金质押制度，一旦验证者履职不足或作恶，将通过扣除保证金的方式补偿跨链网络。</p>
+<p>使用类似本类跨链桥技术的项目案例有：</p>
+<p><strong>1. WBTC</strong></p>
+<p>全称 Wrapped BTC，是一种锚定 BTC 的 ERC20 代币，通过将 BTC 网络中的 BTC 跨链至以太坊，从而实现 BTC 价值的进一步赋能，增强其流动性，由于每个 WBTC 都 1:1 与 BTC 进行锚定，因此其价值本身与 BTC 等同。跨链机制由两类角色参与，托管商和做市商，托管商负责托管用户锁定的 BTC 以及依据做市商的铸造请求最终执行 WBTC 的铸造并支付给做市商，做市商负责与用户交互，接收用户支付的 BTC 并托管给托管商，以及发起铸造请求并将铸造后的 WBTC 支付给用户。对做市商和托管商的管理是基于 DAO 的概念，依据多方参与共识进行增减。</p>
+<p><strong>2. WormHole</strong></p>
+<p>Wormhole 是近期比较火的 Solana 公链的官方跨链平台，主要用来实现以太坊和 Solana 资产之间的双向转换。此类官方跨链平台主要是服务于自身公链生态的拓展，引流外部资金而开发的，通过以太坊 ERC20 标准和 Solana SPL 标准的跨链转换，为用户提供便捷的跨链体验。Wormhole 的跨链网络是由 19 个独立的验证人进行维护，19 个验证人形成的共识，确保跨链协议的安全性。</p>
+<p><strong>3. Avalanche Bridge</strong></p>
+<p>AvalancheBridge 也是一款官方跨链桥，用于将 ERC20 标准的资产与 AvalancheBridge 的 Subnet——Contract 链进行跨链互通，但该跨链桥功能有限，仅支持 ERC20 代币，不支持 BTC、ETH 等原生代币资产。在该跨链桥中，会有名为 warden 的第三方独立验证人对跨链交易进行验证，只有 3/4 以上的验证人达成共识才可成行。</p>
+<p><strong>4. Anyswap</strong></p>
+<p>Anyswap 是一个专门化的去中心化跨链交换协议，目前已运行在多个主流平台，支持以太坊、BSC、Fusion、Fantom 等多个区块链的资产跨链，也支持 L2 解决方案，Anyswap 平台的稳定性和去中心化性由 Any 代币的持有者选出的 Anyswap 工作节点支持，其使用基于 SMPC 安全多方计算 +TSS 门限签名技术，使其可以覆盖几乎全部种类数字资产。</p>
+<p>除了以上项目之外，还有 Matic、Synapse、Thorchain、Qredo、Ronin 等项目均采用此类跨链桥技术。</p>
+<p><strong>（三）Smart Contract/Light client（去中心化验证）</strong></p>
+<p>去中心化验证模式也叫原生验证，就是通过源链上的消息进行监控，然后将加密证明和区块头转发到目标链上的智能合约，验证后在目标链上执行操作，这是一种无须信任的模式，同时由于验证传递的信息较多，因此存在验证本身费用较高，速度相对较慢的问题。</p>
+<p><strong>1. Terra Bridge</strong></p>
+<p>Terra Bridge 是 Terra（LUNA）提供的官方跨链桥，主要作用是将 Terra 生态中的代币资产跨链至 BSC、以太坊等网络，目前支持 Terra 生态内的 LUNA、UST 以及合成资产代币 mToken 跨链。该跨链桥基于在 Terra 和以太坊两侧部署的 Shuttle 合约，仅在从 Terra 到以太坊进行代币跨链时才收取跨链中继费用。</p>
+<p><strong>2. Near RainbowBridge</strong></p>
+<p>RainbowBridge 是 Near 官方推出的跨链桥，主要用于对接以太坊上的资产，仅支持 ERC20 资产的跨链。Near 彩虹是一个无须许可、无须信任的自动化协议，它通过在以太坊和 Near 链上部署智能合约（轻客户端），实现 Near 和以太坊上的信息互通，包括能够识别状态以及制定信息回调安排。</p>
+<p><strong>3. IBC</strong></p>
+<p>全称 Inter-Blockchain Communication，是 Cosmos 推出的通用跨链信息传输协议，可以让信息和资产跨链更去中心化。源链上 IBC 模块会不断同步目标链上的区块头信息，同时目标链上的 IBC 模块也一样，双方能够实现跟踪对方区块链上的验证者集合变化，本质上就是互相维护了一个对方的轻节点。</p>
+<p><strong>4. BTC Relay</strong></p>
+<p>BTC Relay 是区块链系统中的第一条侧链，最初用来解决 BTC 的流动性问题。其是部署在以太坊上的智能合约，该合约保存了比特币区块链的区块头信息，BTC Relay 使用这些信息构建类似 BTC SPV 轻客户端使用的 BTC 迷你链，来使得以太坊上的智能合约能够验证 BTC 区块链上的交易，简而言之，就是用户可以通过使用 BTC Relay，支付 BTC 来使用以太坊上的 Dapp，整个过程是去中心化的。</p>
+<p>除了以上项目之外，还有波卡 SnowBridge、LayerZero、Movr、Optics、Gravity Bridge 等项目均采用此类跨链桥技术。</p>
+<p><strong>（四）Peer to Peer（流动性网络）</strong></p>
+<p>流动性网络是基于节点的点对点网络，是一种局部认证的方式，每个节点本身就是路由器，提供目标链的原生资产而非封装资产，用户通过与局部节点/验证人角色进行交互而进行跨链。</p>
+<p><strong>1. Hop</strong></p>
+<p>Hop Bridge 是一个通用的跨 Rollup 和 L1 的跨链桥，支持以太坊 Arbitrum 和 Optimism 方案，侧链 Matic 以及以太坊间的转账。Hop Bridge 借用了销毁/铸造代币的模式，并在源链和目标链两端加上了两个 AMM 流动性池，用户的跨链手续费用于支付给流动性池 LP 提供者。此类跨链资产安排就是我们在第三部分中提到的 Wrapped + Mint/Burn 方法。在以上过程中有两个重要角色，Bonder 和 LP，Bonder 是有白名单的节点，需要抵押资产来铸造两个 AMM 流动性池中使用到的封装资产 htoken,LP 为链上的 AMM 提供流动性并获得收益。</p>
+<p><strong>2. Celer</strong></p>
+<p>Celer 是一个高性能的 Layer2 拓展性平台，具备跨多链、跨 L2 的特性，CBridge 是 Celer 推出的跨链桥，旨在支持不同的 L1 公链、不同的 Rollup 解决方案（Arbitum）和侧链（Matic）。CBridge 的跨链过程不涉及代币的铸造和销毁过程，Celer 通过构建状态通道并在通道上进行原子交换来实现资产转移，整个过程的安全性由 SGN 保障，SGN 是一个专门的 POS 区块链，用于监控与 L2 状态相关的 L1 交易，并信息从 L2 传递回 L1。具体来说，用户在源区块链上进行资产锁定后，CBridge 会在源链和目标链上创建一个状态通道，用户的交易对手方是 relay node，relay node 会在目标链上创建安全合约，用于用户对目标链上的跨链后资产进行 claim。Relay node 在不同链上都有丰富的流动性，确保用户能够顺畅的进行资产跨链。</p>
+<p><strong>3. Connext</strong></p>
+<p>Connext 也是一个以太坊的 L2 互操作协议，其在资产跨链的基础上将功能拓展到了跨链数据调用，理论上其可以支持所有 EVM 兼容的链。其跨链桥与 Celer 相似，通过在支持的链上构建流动性池，利用状态通道实现原子交换。在跨链信息传递方面，Celer 使用 SGN（外部验证者）来验证跨链数据安全，而 Connext 部署 NXTP 实现跨链信息的内部验证。跨链过程中会涉及 Router 和 Relayer 的角色，Router 与 celer 的 relay node 角色相似，用户提出跨链请求后由 Router 进行竞价，而后将交易进行跨链传递，Relayer 负责跨链信息的内部验证，Router 和 Relayer 共同确认后用户可以获得跨链后资产。</p>
+<p><strong>五、结语</strong></p>
+<p>虽然跨链桥技术蓬勃发展，但目前仍有很多问题亟待解决，比如跨链桥跨链普遍用时过长的问题、比如 NFT 跨链的实现问题、比如跨链解决方案成本过高的问题等等。对于跨链桥技术优劣的区分，没有绝对的标准，随着场景和用户的转变，对跨链桥技术的使用偏好也发生着变化，但究其核心，安全才是第一位的。随着区块链技术的蓬勃发展，即使经过安全机构审计的合约代码，也存在被攻击的可能。未来的区块链世界必然是万链互联的，基于特定公链的官方跨链桥百花齐放，中心化交易所的高效跨链设施也必将占有一席之地，波卡、Cosmos 提出的同质化区块链跨链平台也将靴子落地，跨链桥将成为区块链网络潮席卷全球的重要武器，不可或缺。</p>
+</div><div class="tags"></div></section></div><div class="container"><ul class="nav"><li>上一篇：<a href="/2022/01/09/%E6%B7%B1%E5%BA%A6-%E5%85%B3%E4%BA%8ELibra2-0%E7%9A%84%E6%96%B0%E6%80%9D%E8%B7%AF%E4%B8%8E%E6%96%B0%E6%80%9D%E8%80%83%EF%BC%88%E5%8F%81%EF%BC%89/">深度: 关于Libra2.0的新思路与新思考（叁）</a></li><li>下一篇：<a href="/2021/12/23/%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%EF%BC%9A%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E8%BE%BE%E5%B0%94%E6%96%87%E8%B7%A8%E9%93%BE%E6%A1%A5/">技术解读：深入了解达尔文跨链桥</a></li></ul></div><div id="backToTop"><div class="back-arrow back-arrow-left"></div><div class="back-arrow back-arrow-right"></div></div><footer class="container"><div class="rights"><span>Powered by </span><a href="http://hexo.io" target="_blank">Hexo </a><span>&</span><a href="https://www.metaspaces.me/" target="_blank"> Meta Space</a><span>, Theme </span><a href="https://github.com/gary-Shen/hexo-theme-bear" target="_blank">Bear</a><span>.</span><div> <a href="https://www.metanetwork.online/" target="_blank">Meta Network </a><span>| </span><a href="https://meta-io.gitbook.io/meta-wiki/how-to-use/how-to-build-your-own-meta-space" target="_blank">Meta Wiki</a></div></div></footer>
+<script src="/script/jquery.min.js"></script>
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script src="/script/index.js"></script>
+
+<script src="/script/post.js"></script>
+</body></html>

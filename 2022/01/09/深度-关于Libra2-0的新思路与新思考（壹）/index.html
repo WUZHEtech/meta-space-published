@@ -1,0 +1,44 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="description" content="做时间的朋友，在不确定性中发现价值。"><meta name="keyword"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>深度: 关于Libra2.0的新思路与新思考（壹）</title><link rel="shortcut icon" href="https://storageapi.fleek.co/casimir-crystal-team-bucket/metanetwork/users/metaio-storage/favicon.ico" type="image/x-icon"><link href="/styles/site.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="刘言不蜚语" type="application/atom+xml">
+</head><body><header class="container" id="header"><div class="header"><div class="header-left"><div class="avatar"><img src="/images/MetaSpace_Logo.svg"></div><div class="author"><div class="author-name"><a href="/">刘言不蜚语</a></div><div class="about-me">一介布衣，一个读书人。</div></div></div><div class="header-right"><ul class="navigation"><li><a href="/archives">归档</a></li></ul></div></div><div class="about-me-wrap"><div class="about-header"> <div class="about__title">About</div><a class="domain">blog.metaspaces.me</a></div><div class="about-content">做时间的朋友，在不确定性中发现价值。</div><div class="about-author"><span>Author</span><div class="profile"> <div class="avatar"><img src="https://storageapi.fleek.co/andoroyur-team-bucket/metanetwork/users/metaio-storage/wei-xin-tu-pian-20211116221141.jpg"></div><div class="author-name">liuwenzhou</div></div></div></div></header><div class="container post"><section class="article"><div class="title">深度: 关于Libra2.0的新思路与新思考（壹）</div><div class="meta"> <div class="profile"> <div class="avatar"><img src="https://storageapi.fleek.co/andoroyur-team-bucket/metanetwork/users/metaio-storage/wei-xin-tu-pian-20211116221141.jpg"></div><div class="author-name">liuwenzhou</div></div><div class="date meta-ele">January 9th 2022</div></div><div class="content"><p>DCEP 消息又起，Libra2.0 白皮书也来了。</p>
+<p>笔者第一时间阅读了Libra2.0 的白皮书，媒体也第一时间翻译出了中文版，我想一千个观众的眼中有一千个哈姆雷特，笔者基于以下几点考虑形成本文。</p>
+<p>1、省略掉了很多原文中的官话和套话。</p>
+<p>2、将高大上的调子翻的更平实通俗些。</p>
+<p>3、保留文章核心干货并添加笔者自己的思考，笔者思考部分用括号标出，供读者参考。</p>
+<p>4、重组了原文结构，逻辑线更清晰些。</p>
+<p>关于Libra 白皮书 1.0 的内容，可以参考笔者之前的行文：</p>
+<p>《<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzU5NTcxMTA2Mw==&amp;mid=2247483946&amp;idx=1&amp;sn=700f8a53072c6ed1944db961f95bf348&amp;chksm=fe6c8712c91b0e0486f330f079acd080b52c3925e19a3ead107ca3584c881e617a7b902fbdee&amp;scene=21#wechat_redirect">刘言：万字长文解析 Libra 技术（上篇）</a>》（下篇还没来得及写~）</p>
+<p><strong>深度: 关于 Libra2.0 的新思路与新思考（壹）</strong></p>
+<p><strong>一、前言及摘要</strong></p>
+<p>Libra1.0 版本白皮书于 2019 年 6 月发布，Libra2.0 白皮书是关于 1.0 白皮书内容的一次升级，同时，相关 2019 年 6 月发布的支持性技术论文也已经被修订。</p>
+<p>Libra 协会这个组织成立的初衷，就是为全世界数十亿的人口提供一个简单的全球性支付系统和金融基础设施。从 2019 年 6 月起，协会所要做的第一步就是创建一个普惠性的、创新性的金融系统，一直以来，Libra 协会就同监管者、央行、管理层以及全球各利益方一道来探索一条道路，这条道路能够将区块链技术与当前的监管框架能够调和的并存并融合起来。协会的目标是要将 Libra 支付系统与各国本土的货币政策及宏观审慎政策进行整合，同时为现存的货币进行补充，赋予他们新的功能，显著的降低中间性成本并赋予各种新的可能。</p>
+<p>随着监管当局态度的转变及当前遇到的困难，协会对最初的路线进行了调整，Libra 协会的目标与其他区块链项目不同，从来不是想要复制或模拟其他系统，而是利用分布式治理机制（与DAO 概念不同，笔者理解的其分布式是从协会成员的多样化而言的，但从目前发展状况来看实质上与股份制企业的治理并无不同）和分布式账本技术（DLT）来建立开放的、可信赖的系统，在这个系统下，传统的金融系统开始变得可编程、可交互、可升级，其他人或机构也可以在 Libra 平台上建立安全且合规的金融应用（传统金融体系的 IT 架构和运营基本是完全封闭的，各金融机构的对外系统接口开放也极其有限，从这点而言，Libra 为金融支付体系的可拓展性提供了无限可能，但从近期各类 Defi 被黑来看，如何保障系统及合约的安全性，无疑是最大的难题）。</p>
+<p>本篇白皮书主要介绍了2019 年以来我们在 Libra 支付体系设计上的一些重要工作，依据监管方面的关注要求，我们做了四个核心的调整，简要如下，详细内容请参见后文：</p>
+<p>1、除1.0 白皮书中提到的锚定一揽子多国货币的 Libra coin（LBR）外，还提出了锚定单一货币的稳定币解决方案。</p>
+<p>2、通过建立健壮的监管服从框架来增强Libra 支付系统的安全性。</p>
+<p>3、放弃未来向无许可链转变的想法，同时尽可能实现无许可链的核心经济特性。（这一点就意味着Libra 放弃了未来转向全球性公链的想法，无许可链就意味着高度去中心化治理和自由度，相应的也就不可控，一旦如此大规模的经济货币系统处于不可控或者自由状态，对于全球经济体系而言，蕴藏着巨大的风险。Libra 协会放弃这些，就意味着未来 Libra 系统将以联盟链的状态存在，但是系统发展的无限可能性就大打折扣了）</p>
+<p>4、在Libra 储备金的设计上加入强有力的保护机制。</p>
+<p>二、<strong>核心调整及其细节内容</strong></p>
+<p>（一）<strong>增加锚定单一货币的稳定币解决方案</strong></p>
+<p>1、LBR 与 Libra 稳定币</p>
+<p>（所谓稳定币的概念是其他数字货币相区别的，类似BTC、ETH 的数字货币，其价值取决于其应用场景和持有者的未来价格预期，有很大的波动性；而稳定币往往是某种货币的锚定币（例如 USDT 之于美元），其价值与锚定货币 1:1 完全绑定，同时存在可 1:1 互换的渠道，从而规避套利机会。在实际情况中，由于在兑换上有流动性限制，因此存在稳定币价格偏离锚定货币的可能，但长期来看，稳定币的价格曲线有明显的均值复归特性。）</p>
+<p>尽快Libra 协会的定位是想让 Libra 网络成为各国法定货币系统的补充而不是与他们竞争，但监管机构仍然普遍认为，当 Libra 这种锚定多国货币的“国际货币”在达到一定体量或者当相当规模的支付结算都通过 Libra 进行时，会对其本国的货币主权和货币政策有效性产生威胁。基于上述情况，我们提出了增加锚定单一货币的稳定币解决方案，前期将从 Libra 所锚定的货币篮子中选取货币种类来铸造 Libra 稳定币（例如 LibraUSD、LibraEUR、LibraGBP、LibraSGD），这就允许对应国家和地区的人们直接使用自己本国货币所对应的稳定币进行交易和结算。每种稳定币都将有等值的储备金作为价值保证，储备金将包括现金、现金等价物以及对应货币的短期政府债。</p>
+<p>相对于各类稳定币，LBR（Libra coin）的角色有了新的定位，它并不是独立于稳定币的一种数字资产，而是 Libra 网络中各类稳定币的“复合品”，不同稳定币的价值在 LBR 的价值中占用固定的名义权重。（稳定币与 LBR 的关系可以参考国际货币基金组织 IMF 中特别提款权 SDR 的概念，SDR 是国际货币基金组织根据会员国认缴的份额分配的，可用于偿还国际货币基金组织债务、弥补会员国政府之间国际收支逆差的一种账面资产，还可与黄金、自由兑换货币一样充当国际储备。特别提款权的价值是由美元、欧元、人民币、日元、英镑这五种货币所构成的一篮子货币的当期汇率确定，五种货币所占权重是固定的。）在实际中，LBR 可以通过依据固定权重整合稳定币的智能合约来实现。</p>
+<p>LBR 由于其中立且稳定的特性，对于不持有 Libra 网络中稳定币的用户，可以作为国际跨境结算的媒介，稳定币 +LBR 的组合，进一步拓展了 Libra 结算网络的可用性，同时可以与各国内部研发的央行数字货币 CBDC 进行无缝衔接与融合。</p>
+<p>2、<strong>经济意义与Libra 储备金</strong></p>
+<p>先前Libra 协会所提出的 Libra 储备金的概念极其运作方法，仅仅是提出了一种基本的概念原型，从 2019 年起，随着与不同机构、监管者、政策制定者及学术专家的不断讨论，关于 Libra 网络的经济体系设计逐渐铺展完整了起来。特别的，G7（七国集团）工作组关于稳定币的研究中提及了一些亟待解决的问题及长期来看会出现的挑战。一个核心的关注点是前文提到的 LBR 规模扩张后对一个货币主权及货币政策有效性的影响，Libra 协会认为这是不可能的，因为 LBR 会受外汇管制的限制（最佳的情况下，LBR 被纳入一国的外汇储备，其总量严格受一国外汇当局监管或可控，但这种情况大概率无法实现，因此上文提到的威胁是真实存在的，特别对于经济发展水平不足的发展中国家，如果 LBR 的使用明显优于美元，将会直接威胁美国在这些国家的利益，包括美元的铸币税、隐形霸权及量化宽松政策在这些国家的消化）。锚定单一货币的稳定币会依据市场的需求量而铸造或者毁灭，同时，由于稳定币与对应法定货币是 1:1 锚定的，因此这个过程不会创造新的货币。（是否不会创造新的货币应当从两个方面考虑：首先，Libra 协会对于稳定币的铸造是否严格遵守 1:1 的设定，是否会存在货币超发的情况，储备金账户的监管机制是如何的，同时如何检测 Libra 的总发行量。例如 USDT 在设计初期也是 1:1 锚定美元，但发展到现在，USDT 由于货币超发问题已经与美元脱锚。其次，一国货币供给量是由基础货币和货币乘数决定的，Libra 稳定币本质就是对基础货币的复制，如果 Libra 体系衍生出信贷行为，则会进一步影响货币乘数，两者的综合会影响一国货币当局对货币总供给量的控制。）对于考虑为本国货币寻求替代物的国家，Libra 可以与其合作在 Libra 网络上发行该国货币的稳定币，对于没有在 Libra 上发行稳定币的国家，使用 LBR 也是很好的选择。对于不同国家用户之间的自己转换和转移需求，Libra 稳定币和 LBR 都可以作为中间媒介使用。同时，Libra 网络自身并不会提供、记录和结算 Libra 货币与一国法币或其他数字资产的结算。相对应的，这种交易所性质的服务将由第三方金融服务商提供。不管是哪个国家和地区，Libra 协会将希望所有虚拟的资产服务提供商（VASP），例如拥有 Libra 网络接口的货币交易所等，能够完全遵守各国的外汇管制及资本管控政策。（Libra 协会将 Libra 代币与法币的兑换服务完全甩给了第三方，而且在原文中使用了 expect 他们遵守法律和外管政策，一方面大大降低了自身的监管压力，同时这种模糊的设定将大大提升 Libra 网络落地的难度。）</p>
+<p>如果一国货币当局发行了自己的CBDC，Libra 网络可以尝试与该 CBDC 进行集成。（也就是说实现 Libra 网络与该国 CBDC 的跨链通信和资产转移，不再发行该国的 Libra 稳定币，直接用该 CBDC 作为 Libra 网络中的稳定币角色来使用。实现这点是极其困难的，先不考虑一国当局是否接受这样的提议并开放接口与 Libra 网络交互，不管公链还是联盟链，区块链跨链技术目前仍处在探索和试错阶段，能否实现国家货币级别的稳定度和安全性，也值得商榷。）</p>
+<p>为了限制Libra 协会单方面的调整 LBR 的成分货币及对应权重，可以设定由监管方、央行及国际组织共同发起的监管机制。同时锚定单一货币的稳定币解决方案的出现，相较原有纯 LBR 的网络，会增加钱包、交易所及商业服务提供商的服务难度，例如钱包将增加跨币种稳定币的兑换机制、稳定币汇款机制等。</p>
+<p>3、<strong>安全性与保护机制</strong></p>
+<p>Libra 网络在经济设计方面的核心目标之一就是建立可信的支付体系。Libra 网络上的每种稳定币都有储备资产作为后盾，同时存在着有竞争力的分销商和交易所网络来为 Libra 网络上的数字货币提供交易和结算渠道。（本质上来讲，如果 Libra 网络上的货币无法与国家法定货币建立自由兑换渠道，这些代币将毫无价值，因此如果在各个国家内部建立合法完善的代币分销和法币兑换渠道，是 Libra 网络能否实现的最大问题，这也是应对各国监管的最大难题，目前数字货币主流交易所由于其管理不完善、运作不透明的原因，基本处于灰色地带运转，如果 Libra 通过上述交易所进行交易，其竞争力将大打折扣。）</p>
+<p>（未完待续，敬请期待。。。。。）</p>
+</div><div class="tags"></div></section></div><div class="container"><ul class="nav"><li>上一篇：<a href="/2022/01/09/%E5%85%B3%E4%BA%8E%E5%BC%97%E6%B4%9B%E5%A7%86%E7%9A%84%E8%AE%B0%E5%BF%86/">关于弗洛姆的记忆</a></li><li>下一篇：<a href="/2022/01/09/%E6%B7%B1%E5%BA%A6-%E5%85%B3%E4%BA%8ELibra2-0%E7%9A%84%E6%96%B0%E6%80%9D%E8%B7%AF%E4%B8%8E%E6%96%B0%E6%80%9D%E8%80%83%EF%BC%88%E8%B4%B0%EF%BC%89/">深度: 关于Libra2.0的新思路与新思考（贰）</a></li></ul></div><div id="backToTop"><div class="back-arrow back-arrow-left"></div><div class="back-arrow back-arrow-right"></div></div><footer class="container"><div class="rights"><span>Powered by </span><a href="http://hexo.io" target="_blank">Hexo </a><span>&</span><a href="https://www.metaspaces.me/" target="_blank"> Meta Space</a><span>, Theme </span><a href="https://github.com/gary-Shen/hexo-theme-bear" target="_blank">Bear</a><span>.</span><div> <a href="https://www.metanetwork.online/" target="_blank">Meta Network </a><span>| </span><a href="https://meta-io.gitbook.io/meta-wiki/how-to-use/how-to-build-your-own-meta-space" target="_blank">Meta Wiki</a></div></div></footer>
+<script src="/script/jquery.min.js"></script>
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script src="/script/index.js"></script>
+
+<script src="/script/post.js"></script>
+</body></html>

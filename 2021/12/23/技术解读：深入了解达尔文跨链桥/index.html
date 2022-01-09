@@ -1,0 +1,141 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="description" content="做时间的朋友，在不确定性中发现价值。"><meta name="keyword"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title>技术解读：深入了解达尔文跨链桥</title><link rel="shortcut icon" href="https://storageapi.fleek.co/casimir-crystal-team-bucket/metanetwork/users/metaio-storage/favicon.ico" type="image/x-icon"><link href="/styles/site.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="刘言不蜚语" type="application/atom+xml">
+</head><body><header class="container" id="header"><div class="header"><div class="header-left"><div class="avatar"><img src="/images/MetaSpace_Logo.svg"></div><div class="author"><div class="author-name"><a href="/">刘言不蜚语</a></div><div class="about-me">一介布衣，一个读书人。</div></div></div><div class="header-right"><ul class="navigation"><li><a href="/archives">归档</a></li></ul></div></div><div class="about-me-wrap"><div class="about-header"> <div class="about__title">About</div><a class="domain">blog.metaspaces.me</a></div><div class="about-content">做时间的朋友，在不确定性中发现价值。</div><div class="about-author"><span>Author</span><div class="profile"> <div class="avatar"><img src="https://storageapi.fleek.co/andoroyur-team-bucket/metanetwork/users/metaio-storage/wei-xin-tu-pian-20211116221141.jpg"></div><div class="author-name">liuwenzhou</div></div></div></div></header><div class="container post"><section class="article"><div class="title">技术解读：深入了解达尔文跨链桥</div><div class="meta"> <div class="profile"> <div class="avatar"><img src="https://storageapi.fleek.co/andoroyur-team-bucket/metanetwork/users/metaio-storage/wei-xin-tu-pian-20211116221141.jpg"></div><div class="author-name">liuwenzhou</div></div><div class="date meta-ele">December 23rd 2021</div></div><div class="content"><p>最近仔细阅读了 Darwinia Medium 博客的四篇关于其跨链桥的说明文章，恰逢近期对跨链桥技术颇感兴趣，现将上述文章核心内容整理说明如下，本文为笔者个人的解读，仅供社区参考。本文约 6000 字，请耐心阅读，定不负时光。</p>
+<p><strong>参考内容：</strong></p>
+<ol>
+<li>[Understanding Darwinia Bridge 1-1] Darwinia Relayer Incentive Scheme—Fee Market.</li>
+<li>[Understanding Darwinia Bridge 1-2] Mapping Token Factory.</li>
+<li>[Understanding Darwinia Bridge 1-3] The Token Bridge Solution.</li>
+<li>[Understanding Darwinia Bridge 1-4] The New Message Protocol for the Ethereum-Darwinia Bridge.</li>
+<li>Fee Market Strategy and Design of Relayer Fee Market details from darwinia’s Github.</li>
+</ol>
+<p><strong>整体思路：</strong></p>
+<p>依据上述文章内容，为更好的、成体系的阐述所有内容，笔者对行文内容进行了编排，打乱了参考文章的顺序。首先我们从 Darwinia 提供的资产跨链解决方案展开（1-3）介绍，之后阐述一下该方案中 Issuing 模块下面的子模块映射代币工厂（1-2）。而后我们深入研究一下资产跨链解决方案中的信息传递环节，即 darwinia 提出的 Ethereum-Darwinia 跨链通讯协议（1-4），最后聚焦通讯协议中的核心角色 Relayer，阐述一下市场化的跨链费用报价过程（1-1）。下面，我们开始。</p>
+<p>一、<strong>The Token Bridge Solution（资产跨链解决方案）</strong></p>
+<p>目前最常用的达尔文跨链桥是达尔文和以太坊之间的双向跨链桥，达尔文是基于 Substrate 开发的区块链，因此达尔文和以太坊两者是异构的。本部分阐述的就是达尔文提出的用于异构区块链之间的资产跨链解决方案。</p>
+<ol>
+<li><strong>CBA model</strong></li>
+</ol>
+<p>达尔文桥基于 CBA（Cryptocurrency Backed Asset）model 设计，该模型下有两个核心模块，即源链上 Backing module 和目标链上的 Issuing module。</p>
+<p><strong>Backing module：</strong> 用于锁定和解锁源区块链上的原生资产。</p>
+<p><strong>Issuing module：</strong> 用于发行和销毁目标链上的映射资产，这种价值由源链上的原生资产背书的映射资产，就是上文中提到的 CBA。</p>
+<p>这种 CBA 模型在跨链桥的设计中是最常见的一种类型。其具体实现方式如下：</p>
+<p>（1）<strong>Deploy&amp;Register 部署与注册</strong></p>
+<p>如下图所示：</p>
+<p><img src="https://ipfs.fleek.co/ipfs/QmSRMmDyZbTkypXdy9EPfC4o4fBA8ExCRsWz8dcpz7UrZy" alt="df802af7-9bf2-4bbb-bcec-eea04badfa45"></p>
+<p>桥创建者在源链上部署 Backing 的智能合约（Backing module）,同时在目标链上部署 Issuing 的智能合约（Issuing module）。跨链桥的使用者可以调动 Backing module 的接口来注册源链上的原始资产，之后 Relayer（中继者）将会把信息同步到目标链的 Issuing 合约，该合约会创建一个映射合约，后续来发行和存储映射的资产。关于 Relayer 的话题，我们会在后面部分详细说明。</p>
+<p>（2）<strong>Issue 发行</strong></p>
+<p>如下图所示：</p>
+<p><img src="https://ipfs.fleek.co/ipfs/QmdFqTXBo5rj6X4gq6cua8G2U7zmq89DEb9LkpjihEkyr7" alt="79b9584f-e786-48f0-90db-f168be945f35"></p>
+<p>用户在源链上锁定一定数量的原生代币并发起代币跨链申请（通过调用 Backing module 的 lock_and_remote_issue()接口），代币锁定后用户可以获得锁定的证明，relayer 将此证明发送至目标链上的 Issuing module 进行验证，验证成功后 Issuing module 依据合约规定将对应数量的映射资产发送至目标链上的收款账户。</p>
+<p>（3）<strong>Transfer/Swap 转账与兑换</strong></p>
+<p>如下图所示：</p>
+<p><img src="https://ipfs.fleek.co/ipfs/QmWPUxSsUWJaQ5RRSFpU2TzPyjaMSxzds2Zgg3kHhgkaji" alt="f0d088be-dd92-44a9-bb90-f6117fd47c03"></p>
+<p>映射代币其本质也是一种代币，因此其也可以作为一种资产在不同用户之间转移，同时可以通过在 dex 上设置流动性交易对与其他代币进行兑换。</p>
+<p>（4）<strong>Redeem 赎回</strong></p>
+<p>如下图所示：</p>
+<p><img src="https://ipfs.fleek.co/ipfs/QmZYkRTsBCfDNmUVjhowK2SaSLTKDPQi6hJiars2KWfYvc" alt="736ecffb-a712-4148-8a9f-0e83274d9f59"></p>
+<p>用户可以在目标链上通过销毁映射代币的方式来解锁源链上锁定的代币（通过调动目标链上 Issuing module 的 remote_unlock()接口），relayer 将销毁映射代币的证明中继至源链上的 Backing module，Backing module 在验证该证明后解锁原生代币。</p>
+<ol start="2">
+<li><strong>Backing Technology 去中心化的资产背书技术</strong></li>
+</ol>
+<p>常见的资产背书技术实现方式主要有以下三种，这里用比较宏观的方式来说明，想研究技术细节还需要去看对应项目的 docs，由于不是本文重点，就不展开说了。</p>
+<p>（1） <strong>多节点验证：</strong> 通过设置多个信任节点或者托管人对用户锁定的原生资产进行集体托管，往往通过多签或者至少占比多少的节点签名等方式来避免单节点模式下的单点失效，去中心化程度依据参与验证节点数量的多少决定。参考 Parity Bridge, ChainX。</p>
+<p>（2） <strong>桥资产质押与 Chain Relay 结合：</strong> 参考 XClaim 项目的方式，但是该方案仅仅适用于同质化、高流动性的资产，并且其经济模型可行性相对较弱。</p>
+<p>（3） <strong>完全使用 Chain Relay（链中继）：</strong> 达尔文跨链桥就是此种方式，完全使用 Chain Relay 进行链上验证。这种解决方案要求部署 Issuing module 的目标链必须支持智能合约、链上 runtime、硬分叉等特性，因此在链中继和类似 Bitcoin 的区块链是无法部署的。这种模式的优势是能够支持多样化的原生资产，包括非流动性资产和 NFT。经济模型而言，类似达尔文的 Sub-linear 亚线性链中继会有更好的表现。</p>
+<p><strong>二、Mapping Token Factory（映射代币工厂）</strong></p>
+<p>本部分我们针对前文提到的，目标链上 Issuing module 的其中一个子模块 Mapping Token Factory 进行实现细节的阐述，该模块主要用于在目标链上创造、发行和销毁映射资产。</p>
+<ol>
+<li><strong>Mapping Assets 映射资产</strong></li>
+</ol>
+<p>这里的 Mapping Assets 主要强调与源链上 native Assets 原生资产的一一映射，在很多场景中也可以叫做 Wrapped Assets/Wrapped Tokens，本质都是一样的，都是由原生资产背书的衍生资产，是跨链场景中常见的技术安排。在映射资产创建之前，Mapping Token Factory（映射代币工厂）为创建映射资产设定了一系列的准则，最终目的都是使映射资产与原生资产保持同样的特性和方法（具体体现在代币的智能合约中），当然，允许存在不同，也允许后续的优化升级。</p>
+<p>在提取链上元数据时，映射资产主要从两方面进行体现：</p>
+<p><strong>Symbol prefix:</strong>  <strong>”</strong>  <strong>x</strong>  <strong>”</strong>  <strong>:</strong> 在元数据中，Mapping Token 标志的前缀会多一个 x，举例来说，如果原生资产为 RING，那么映射资产就为 xRING，如果 xRING 再次被映射，则映射后的资产名称为 xxRING。</p>
+<p><strong>Name postfix：</strong>  <strong>”[${backing_chain_short_name}&gt;”</strong>  <strong>:</strong> 还是举将 RING 从 Darwinia 主网向其测试网 Crab 进行跨链，RING 的全称叫做 Darwinia Network Native Token，则 Crab 上跨链后的资产名称就为 Darwinia Network Native Token[Darwinia&gt;，如果该资产又跨链至其他区块链网络，则新网络上的资产名称为 Darwinia Network Native Token[Darwinia&gt;[Crab&gt;。下图展示了以 USDT 进行跨链的类似流程：</p>
+<p><img src="https://ipfs.fleek.co/ipfs/QmXVHS8uaZhEvedyYLJYfh6etHFJH2y4BWM73Ecf6XY8MU" alt="5073ad4e-55f8-4c07-a143-51b348be5196"></p>
+<ol start="2">
+<li><strong>Permission Management 许可管理</strong></li>
+</ol>
+<p>进行资产的发行许可不是由单个私钥进行控制的，而是由系统账户进行控制，只有在源链上的 backing module 锁定了原生资产以后，才可以激活目标链上的发行许可，一旦映射资产发行至收款人的账户，收款人对该资产就拥有了完全控制权。对应的，在解锁的流程中，只有在目标链上进行了映射资产的销毁，才能够获取源链上的原生资产的解锁许可，这种机制确保的映射资产和原生资产的一一背书和映射关系，实质上来讲，映射资产的转移与原生资产的转移，在价值上，是对等的。</p>
+<ol start="3">
+<li><strong>Safety of Assets 资产安全</strong></li>
+</ol>
+<p>一旦在两个区块链中为某种资产 Token 建立了跨链桥，这个桥就拥有了独立的安全性，也就是说，不同资产之间的跨链桥是相互独立的，单个资产桥的安全问题不会影响其他桥。</p>
+<p><strong>三、The Message Protocol for the Ethereum-Darwinia Bridge（以太坊-达尔文桥的信息跨链协议）</strong></p>
+<p>IT 技术的本质是信息的传递，而跨链技术的核心就是跨链信息的传递和确认，在从代币的角度了解了达尔文跨链桥的宏观架构后，我们聚焦跨链过程中信息中继和传递的过程，the Message Protocol，为便于细节讲解，后文基于已经实现并落地的达尔文 Ethereum-Darwinia 跨链桥进行阐述，可参考下图：</p>
+<p><img src="https://ipfs.fleek.co/ipfs/QmZ5wfR3yRZBTtpb7b8yebvDJRi1JwMZ7mA7F3TwWzqfz6" alt="ca986f86-975a-4bf9-b050-500a84fc1ea0"></p>
+<ol>
+<li><strong>相关概念</strong></li>
+</ol>
+<p><strong>（1）Message 信息：</strong> 所谓信息跨链本质上是指从源链上发送带有参数的跨链指令，调用目标链上智能合约的功能函数。简单来讲，就是用户向跨链桥发起跨链指令，该指令中含有用户需要进行跨链的 token，数量等参数信息，该信息被处理并中继至目标链的智能合约，调用智能合约代码中的功能函数。这个过程类似于一个 RPC 调用，而 message 中往往含有源链、目标链、指令内容等数据。</p>
+<p>（2） <strong>Channel 通道：</strong> 通道是单向的，负责将信息从源链发送至目标链，包括源链上的 outbound lane（出站通道）和目标链的 inbound lane（入站通道）两种，当然，在实现双向跨链的情况下，两个区块链上两种通道都是有的。如上图，在 Darwinia 跨链桥的三层设计中，用户想要实现跨链就必须将信息通过 Message Layer 信息层的通道进行传输，信息层含有多个这样的出入站通道，并且并对传输信息有一定的保护和筛选机制。</p>
+<p>（3） <strong>Relayer 中继：</strong> 中继是信息传输搬运工的角色，负责将信息在源链和目标链之间传递，与区块链上的智能合约不同，它是一个链下的角色，是达尔文跨链桥的重要组成部分。</p>
+<ol start="2">
+<li><strong>Message Workflow 信息流</strong></li>
+</ol>
+<p>信息传输协议可以通过链上智能合约或者 runtime 中的一个模块实现，目前达尔文网络已经实现了 DVM 虚拟机（对以太坊智能合约兼容），因此 Darwinia 在以太坊和达尔文网络两边都通过智能合约部署了信息传输协议。</p>
+<p><strong>（1）Data Structure of Message 信息流的数据结构</strong></p>
+<p><img src="https://ipfs.fleek.co/ipfs/QmPp1VyPb5ofMW6SAGkdGtG3gYLUmVNS4iFcsVEq1RLNeM" alt="2a24d98b-034d-4eb1-8318-58e76b334e5f"></p>
+<p>如上图所示，</p>
+<p>Message 是由源链上的智能合约产生，被发送至目标链上的智能合约并被执行。其包括 MessageKey 和 MessageData 两部分，其中 MessageKey 包括源链、目标链和出入站通道 ID；MessageData 代表了用户想要对目标链上智能合约进行的操作指令，包括指令内容 payload（发起账户地址、目标合约地址及具体指令参数）和跨链费用信息 fee。理论上 payload 中包含的指令数据信息没有限制，而且可以被目标链上的智能合约解码读取并执行，在设计上达尔文使用 ABI 编码方式，因为它易于生成且 gas fee 低。</p>
+<p><strong>（2）Process of a message delivery 信息传递的完整生命周期</strong></p>
+<p>完整生命周期如下图所示（请放大图片观看，以信息从以太坊跨链至达尔文网络为例）：</p>
+<p><img src="https://ipfs.fleek.co/ipfs/QmNfahutLz1hdazGMMmoAN9abEjptLR1opnE2q9m1dGFMH" alt="41696cf9-a771-44e9-8dc1-63a16e61501a"></p>
+<p>首先，以太坊的用户发送指令消息来调用达尔文网络上智能合约的功能函数（通过调用 outbound lane 出站通道的 send_message()），就像前文中提到的，该信息包括通道的 ID、用户愿意支付的跨链费用信息等数据。</p>
+<p><strong>Phase1 第一阶段（Delivery Phase）：</strong></p>
+<p><strong>#1 保存信息并触发 MessageAccepted 事件：</strong> 以太坊上指定的出站通道会检查并保存信息，并且触发“信息已接收”的事件，如果该信息通过了检查，会被配发一个 nonce 并保存在智能合约中，到这一步，信息就处于“被跨链桥接收”的状态。</p>
+<p><strong>#2 获取存储/信息证明：</strong> 一旦 relayer 发现了处于被接收状态的信息，就会要求获取相关证明（receipt_proof 或者 storage_proof）。</p>
+<p><strong>#3 接收信息证明 &amp; #4 验证信息证明：</strong> relayer 接收了相关证明后，就会通过调用达尔文网络上特定 inbound lane 入站通道的 receive_message_proof()功能来转发信息和相关证明，同时由运行在达尔文网络上的以太坊轻客户端（所谓轻客户端是与完整客户端相对应的，相较完整客户端完全存储以太坊的区块链信息，轻客户端仅仅存储以太坊区块头信息以确保信息进行验证，轻客户端往往背后会依赖于完整的客户端以确保万一需要对完整信息进行核验）对信息的证明进行验证（通过调用 verify_message_proof()功能）。</p>
+<p><strong>#5 接收信息并发送信息 &amp; #6 保存传递的信息并触发 MessageDispatched 事件：</strong> 以太坊轻客户端验证完信息后，入站通道会继续转发信息并触发“消息已发送”事件，至此，消息已被转发至目标链并处于“被跨链桥送达”的状态，虽然消息已经被送达，但目标链并不知道这个情况，因此需要进入信息跨链的第二阶段，relayer 需要把达尔文网络上的信息传递情况通知以太坊侧。</p>
+<p><strong>Phase2 第二阶段（Confirmation Phase）：</strong></p>
+<p>进行第二阶段 Confirmation 的信息传递主要出于以下两方面的考虑：一是通过该阶段流程的开展，可以对完成对已经 delivered 但尚未 confirmed 的信息进行流量控制；二是如果部署了 Relayer Fee Market（后文会提到），relayer 需要证明他们确实完成了信息的传递并获取对应奖励。</p>
+<p><strong>#7 获取存储/信息证明、#8 接收信息传递证明、#9 验证信息传递证明、#10 确认信息传递：</strong> 与第一阶段的流程类似，以太坊上部署的达尔文轻客户端会对 relayer 提交过来的第一阶段工作证明进行验证，之后以太坊上的入站通道就会触发第二阶段的“消息已被跨链桥送达”事件，至此，信息传递已最终被跨链桥两侧确认。</p>
+<p><strong>#11 触发 MessageDelivered 事件并支付 relayer 奖励：</strong> 之后就会触发 relayer 获取奖励的流程也是支付跨链费的过程。</p>
+<p><strong>#12 获取存储/信息证明 &amp; #13 接收信息证明：</strong> 最后 relayer 会通知达尔文链信息传递已经被最终确认，可以进行后面其他信息的跨链操作，没有这最后一步，达尔文链上的所有跨链信息都会排队堆积在入站通道，而无法被转发。</p>
+<ol start="3">
+<li><strong>Relayer Incentive Scheme 中继激励机制</strong></li>
+</ol>
+<p>目前 relayer 节点是由达尔文项目自己运行的，以确保跨链桥的有效运行，同时达尔文也设计了一套名为 Relayer Fee Market 的 Relayer 激励机制，以确保未来通过更为去中心化的形式实现跨链桥并吸引更多参与者来建设社区。</p>
+<p><strong>四、Darwinia Relayer Incentive Scheme—Fee Market（达尔文中继的激励框架—跨链费市场）</strong></p>
+<p>最后我们聚焦于跨链桥的最重要角色 Relayer（中继），阐述一下达尔文设计的一个集中竞价的跨链费价格决定机制，Relayer Fee Market。</p>
+<ol>
+<li><strong>前提条件</strong></li>
+</ol>
+<p>（1）仅支持源链的原生代币作为作为跨链费的支付方式。</p>
+<p>（2）跨链费的计算由源链上的定价系统决定，该定价系统是由 Relayer Fee Market 实现的。</p>
+<p>（3）目标链上的所有交易成本均由 relayer 承担，relayer 通过出示其成功传递消息的证明获取跨链处理费用，为了确保激励机制可行，定价机制应当确保 relayer 获取的跨链费用收益高于其成本，如果自动化的定价市场出现问题，relayer 应当可以手工出价，一旦 relayer 没有如期传递消息，他们应当被惩罚。</p>
+<p>（4）在 Relayer Fee Market 市场上，relayers 和用户是供需的双方，因此跨链费的高低随着供需双方的多寡而波动，同时任何人都可以承担 relayer 的角色，一旦成为 relayer，就必须承担对应的风险，这些风险包括代币价格波动、报价和获取收益的时滞、操作失败后惩罚导致的押金损失等。</p>
+<ol start="2">
+<li><strong>Tiered Quotation Market 分层报价市场</strong></li>
+</ol>
+<p>分层报价市场适用于源链上 gas 费较低且交易确认速度比较快的链，例如 Heco、BSC、Polygon 和 Darwinia，其具体报价流程如下：</p>
+<p>首先会有一个链下的定价系统来发布价格参考信息，relayers 依据系统提供的参考价格信息提出自己的报价，同时需要在链上锁定一定数量的保证金做抵押以防止失败和作恶的情形。在有意向的 relayers 都提出报价后，系统会对价格进行升序排序并选出最低的 n 个报价，我们假设是最低报价为 Relayer1（简称 R1）提出的价格 P1，次低为 R2 提出的 P2，依次类推直至 Rn 提出的 Pn，这 n 个被选出的 Relayers 都叫做 Assigned Relayer，而用户在本次市场中实际支付的跨链费为 Pn，之所以一次选择 n 个 Relayer 出来，是出于备份冗余的考虑。这 n 个被选出来的 Assigned Relayers 实际上集体为本次的信息跨链负责，跨链成功，他们会拿走多数的奖励，也会因为失败而被严厉惩罚。依据自己报价的高低每个 Assigned Relayer 都会被分配一个 time slot，出价越低 time slot 的优先级越高，信息跨链就越可能在自己的 time slot 被传递和确认。同时系统会确保有足量的 Assigned Relayer 才会执行信息跨链，如果参与的 Assigned Relayer 低于系统要求的 MIN_ASSIGNED_RELAYERS_NUMBER，系统会自动拒绝用户跨链请求。</p>
+<p>这里我们要聚焦一下 Assigned Relayer、Delivery Relayer 和 Confirmation Relayer 的区别，因为最终的跨链费奖励会流向他们（下一部分阐述）。笔者在阅读原文过程中一开始对这三个概念有些混淆，在反复阅读原文并咨询 Darwinia Dev 后，进一步理解阐述如下：</p>
+<p><strong>Assigned Relayer：</strong> 如前文所言 Assigned Relayers 要质押保证金在链上，集体为本次的信息跨链负责，是可能被惩罚的，但只要正常履职，会拿走多数奖励。</p>
+<p><strong>Delivery Relayer：</strong> 是执行本文第三部分中提到的 Delivery Phase 过程的 Relayer，可以是 Assigned Relayer，也可以是报价未被选中的 Relayer，实际上成为 Relayer 的门槛不高，只要机器运行 darwinia Bridger 客户端即可，也不是必须要进行保证金抵押。</p>
+<p><strong>Confirmation Relayer：</strong> 是执行本文第三部分中提到的 Confirmation Phase 过程的 Relayer，同样的，也可以是 Assigned Relayer 或者是其他 Relayer，对是否质押保证金也没有要求。Confirmation Relayer 和 Delivery Relayer 可以不是同一个。</p>
+<ol start="3">
+<li><strong>Details of Implementation 详细的实现过程</strong></li>
+</ol>
+<p>（1） <strong>Relayer 注册和锁定保证金：</strong> 调用 enroll_and_lock_collateral 实现，可以调用 cancel_enrollment 退出，但值得注意的是，一旦 Relayer 被选作了单个信息跨链过程的 Assigned Relayer，在跨链过程结束前是无法退出的，因为其可能会被 slash 掉保证金。</p>
+<p>（2） <strong>报价：</strong> 目前使用较为简单的报价方式，即 fn(message)=const_price * 1，即每条消息的固定价格是多少，后续会对 fn(message)报价方式进行更市场化的开发。如果 Relayer 在注册后保证金由于被罚款而导致不足，那么其在补足保证金前将无法在成为 Assigned Relayer。</p>
+<p>（3） <strong>发送信息：</strong> 用户支付 Pn 跨链费来进行跨链，Pn 的分配会通过 relayer fund account 模块开展。</p>
+<p>（4） <strong>信息传递：</strong> Delivery Phase 和 Confirmation Phase 过程，具体可参考第三部分。</p>
+<p>（5**）奖励或者惩罚 Relayer：**</p>
+<p><img src="https://ipfs.fleek.co/ipfs/QmbqKUewSq7PqMi9SLHWiMEUtFMMJQT8SrUAUp69qy5mNx" alt="4e8bd595-2728-49fb-bf08-d0900cc762cb"></p>
+<p>上图展示了用户支付的跨链费 Pn 的分配过程，以及一旦在所有 Assigned Relayers 的 time slot 中均跨链失败后 Assigned Relayer 被集体惩罚的过程：</p>
+<p>**a. **虽然用户实际支付了 Pn 的跨链费用，但实际只有 Assigned Relayers 中的最低报价 P1 被支付给了各个 Relayer，中间的差值 Pn-P1 直接上缴国库。在 P1 的分配上，如果用户的信息跨链最终在 Relayer n 的 time slot 中被确认，那么 Rn 就会得到 60%P1 的奖励，Message Delivery Relayer 可以得到 80%（1-60%）P1 的奖励，Confirmation Relayer 得到剩下 20%（1-60%）P1 的奖励。</p>
+<p><strong>b.</strong> 一旦在所有 Assigned Relayers 的 time slot 中均跨链失败后，用户的跨链信息依然会被跨链并经过 Delivery 和 Confirmation 的过程，此时 Message Delivery Relayer 和 Confirmation Relayer 会按照 8:2 的比例分享全部的跨链奖励 S(t)（S(t)&gt;Pn），而这个跨链奖励 S(t)来自于对所有 Assigned Relayer 锁定的保证金罚款而来。</p>
+<p>**c. **我们可以将跨链费的分配看做是一个 order+auction 的市场，Assigned Relayer 们所在的是 order 订单市场，他们需要在合理的时间内实现信息的跨链（即在所有 Assigned Relayer 的 time slot 跑完之前完成跨链，否则就会被 slash），一旦在有限时间内未实现跨链，则该订单进入拍卖市场由大家竞争参与 S(t)的争夺，当然在拍卖市场中之前的 Assigned Relayer 也可以进来参与争夺，以对冲之前被 slash 的损失。</p>
+<p>除了介绍上文提到的跨链费报价市场外，原文还提出了预言机 + 链上自动定价的替代机制，也提到了专门针对与 non-Substrate 区块链进行跨链的 BEEFY 协议，它可以看做是 GRANDPA Finality 协议的可选组件，有兴趣的读者可以自行深入研究。</p>
+<p>以上。</p>
+</div><div class="tags"></div></section></div><div class="container"><ul class="nav"><li>上一篇：<a href="/2022/01/09/%E6%B5%85%E6%9E%90%E8%B7%A8%E9%93%BE%E6%A1%A5%EF%BC%88%E7%BB%BC%E8%BF%B0%EF%BC%89/">浅析跨链桥（综述）</a></li></ul></div><div id="backToTop"><div class="back-arrow back-arrow-left"></div><div class="back-arrow back-arrow-right"></div></div><footer class="container"><div class="rights"><span>Powered by </span><a href="http://hexo.io" target="_blank">Hexo </a><span>&</span><a href="https://www.metaspaces.me/" target="_blank"> Meta Space</a><span>, Theme </span><a href="https://github.com/gary-Shen/hexo-theme-bear" target="_blank">Bear</a><span>.</span><div> <a href="https://www.metanetwork.online/" target="_blank">Meta Network </a><span>| </span><a href="https://meta-io.gitbook.io/meta-wiki/how-to-use/how-to-build-your-own-meta-space" target="_blank">Meta Wiki</a></div></div></footer>
+<script src="/script/jquery.min.js"></script>
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script src="/script/index.js"></script>
+
+<script src="/script/post.js"></script>
+</body></html>
